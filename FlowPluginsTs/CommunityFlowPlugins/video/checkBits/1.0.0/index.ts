@@ -50,8 +50,7 @@ const plugin = (args: IpluginInputArgs): IpluginOutputArgs => {
     const videos = args.inputFileObj.ffProbeData.streams.filter((stream) => {
       return stream.codec_type === "video"
     })
-    for (let i = 0; i < args.inputFileObj.ffProbeData.streams.length; i += 1) {
-      const stream = args.inputFileObj.ffProbeData.streams[i]
+    videos.forEach((stream) => {
       if (stream.bits_per_raw_sample === 8 || stream.pix_fmt === "yuv420p") {
         bits = "8"
       }
@@ -67,7 +66,7 @@ const plugin = (args: IpluginInputArgs): IpluginOutputArgs => {
       ) {
         bits = "12"
       }
-    }
+    })
   } else {
     throw new Error("File has no stream data")
   }

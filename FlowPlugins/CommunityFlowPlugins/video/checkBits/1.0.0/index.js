@@ -43,8 +43,7 @@ var plugin = function (args) {
         var videos = args.inputFileObj.ffProbeData.streams.filter(function (stream) {
             return stream.codec_type === "video";
         });
-        for (var i = 0; i < args.inputFileObj.ffProbeData.streams.length; i += 1) {
-            var stream = args.inputFileObj.ffProbeData.streams[i];
+        videos.forEach(function (stream) {
             if (stream.bits_per_raw_sample === 8 || stream.pix_fmt === "yuv420p") {
                 bits = "8";
             }
@@ -56,7 +55,7 @@ var plugin = function (args) {
                 stream.pix_fmt === "yuv420p12le") {
                 bits = "12";
             }
-        }
+        });
     }
     else {
         throw new Error("File has no stream data");
