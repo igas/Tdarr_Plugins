@@ -83,16 +83,20 @@ var details = function () { return ({
 exports.details = details;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 var plugin = function (args) { return __awaiter(void 0, void 0, void 0, function () {
-    var lib, fileName, newName, fileDir, newPath;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var lib, fileName, container, regex, newName, fileDir, newPath;
+    var _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
                 lib = require('../../../../../methods/lib')();
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-param-reassign
                 args.inputs = lib.loadDefaultValues(args.inputs, details);
-                fileName = (0, fileUtils_1.getFileName)(args.inputFileObj._id);
-                newName = String(fileName).trim();
-                newName = newName.replace(/\]-[A-Za-z0-9]+\.(mkv|mp4)$/g, "-".concat(args.inputs.releaseGroup, ".$1"));
+                fileName = ((_a = args.inputFileObj.meta) === null || _a === void 0 ? void 0 : _a.FileName) || '';
+                container = (0, fileUtils_1.getContainer)(args.inputFileObj._id);
+                regex = new RegExp("]-[A-Za-z0-9]+.".concat(container, "$"));
+                newName = fileName
+                    .trim()
+                    .replace(regex, "]-".concat(args.inputs.releaseGroup, ".").concat(container));
                 fileDir = (0, fileUtils_1.getFileAbosluteDir)(args.inputFileObj._id);
                 newPath = "".concat(fileDir, "/").concat(newName);
                 if (args.inputFileObj._id === newPath) {
@@ -112,7 +116,7 @@ var plugin = function (args) { return __awaiter(void 0, void 0, void 0, function
                         args: args,
                     })];
             case 1:
-                _a.sent();
+                _b.sent();
                 return [2 /*return*/, {
                         outputFileObj: {
                             _id: newPath,

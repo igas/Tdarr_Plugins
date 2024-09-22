@@ -1,5 +1,6 @@
 import fileMoveOrCopy from '../../../../FlowHelpers/1.0.0/fileMoveOrCopy';
 import {
+  getContainer,
   getFileAbosluteDir,
   getFileName,
 } from '../../../../FlowHelpers/1.0.0/fileUtils';
@@ -55,13 +56,13 @@ const plugin = async (args: IpluginInputArgs): Promise<IpluginOutputArgs> => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-param-reassign
   args.inputs = lib.loadDefaultValues(args.inputs, details);
 
-  const fileName = getFileName(args.inputFileObj._id);
+  const fileName = args.inputFileObj.meta?.FileName || '';
+  const container = getContainer(args.inputFileObj._id);
+  const regex = new RegExp(`]-[A-Za-z0-9]+.${container}$`);
 
-  let newName = String(fileName).trim();
-  newName = newName.replace(
-    /\]-[A-Za-z0-9]+\.(mkv|mp4)$/g,
-    `-${args.inputs.releaseGroup}.$1`,
-  );
+  const newName = fileName
+    .trim()
+    .replace(regex, `]-${args.inputs.releaseGroup}.${container}`);
 
   const fileDir = getFileAbosluteDir(args.inputFileObj._id);
   const newPath = `${fileDir}/${newName}`;
