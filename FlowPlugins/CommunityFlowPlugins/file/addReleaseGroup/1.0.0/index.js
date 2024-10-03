@@ -83,22 +83,29 @@ var details = function () { return ({
 exports.details = details;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 var plugin = function (args) { return __awaiter(void 0, void 0, void 0, function () {
-    var lib, fileName, container, regex, newName, fileDir, newPath;
-    var _a;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    var lib, fileName, container, regex, regex2, newName, fileDir, newPath;
+    var _a, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
                 lib = require('../../../../../methods/lib')();
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-param-reassign
                 args.inputs = lib.loadDefaultValues(args.inputs, details);
-                fileName = ((_a = args.inputFileObj.meta) === null || _a === void 0 ? void 0 : _a.FileName) || '';
+                fileName = ((_b = (_a = args.inputFileObj.meta) === null || _a === void 0 ? void 0 : _a.FileName) === null || _b === void 0 ? void 0 : _b.trim()) || '';
                 container = (0, fileUtils_1.getContainer)(args.inputFileObj._id);
                 regex = new RegExp("]-[A-Za-z0-9]+.".concat(container, "$"));
-                newName = fileName
-                    .trim()
-                    .replace(regex, "]-".concat(args.inputs.releaseGroup, ".").concat(container));
+                regex2 = new RegExp(".".concat(container, "$"));
+                newName = regex.test(fileName)
+                    ? fileName.replace(regex, "]-".concat(args.inputs.releaseGroup, ".").concat(container))
+                    : fileName.replace(regex2, "-".concat(args.inputs.releaseGroup, ".").concat(container));
                 fileDir = (0, fileUtils_1.getFileAbosluteDir)(args.inputFileObj._id);
                 newPath = "".concat(fileDir, "/").concat(newName);
+                args.jobLog("inputFileObj._id: ".concat(args.inputFileObj._id));
+                args.jobLog("container: ".concat(container));
+                args.jobLog("fileDir: ".concat(fileDir));
+                args.jobLog("fileName: ".concat(fileName));
+                args.jobLog("newName: ".concat(newName));
+                args.jobLog("newPath: ".concat(newPath));
                 if (args.inputFileObj._id === newPath) {
                     args.jobLog('Input and output path are the same, skipping rename.');
                     return [2 /*return*/, {
@@ -116,7 +123,7 @@ var plugin = function (args) { return __awaiter(void 0, void 0, void 0, function
                         args: args,
                     })];
             case 1:
-                _b.sent();
+                _c.sent();
                 return [2 /*return*/, {
                         outputFileObj: {
                             _id: newPath,

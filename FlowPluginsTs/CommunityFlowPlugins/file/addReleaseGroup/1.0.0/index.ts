@@ -56,16 +56,24 @@ const plugin = async (args: IpluginInputArgs): Promise<IpluginOutputArgs> => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-param-reassign
   args.inputs = lib.loadDefaultValues(args.inputs, details);
 
-  const fileName = args.inputFileObj.meta?.FileName || '';
+  const fileName = args.inputFileObj.meta?.FileName?.trim() || '';
   const container = getContainer(args.inputFileObj._id);
   const regex = new RegExp(`]-[A-Za-z0-9]+.${container}$`);
+  const regex2 = new RegExp(`.${container}$`);
 
-  const newName = fileName
-    .trim()
-    .replace(regex, `]-${args.inputs.releaseGroup}.${container}`);
+  const newName = regex.test(fileName)
+    ? fileName.replace(regex, `]-${args.inputs.releaseGroup}.${container}`)
+    : fileName.replace(regex2, `-${args.inputs.releaseGroup}.${container}`);
 
   const fileDir = getFileAbosluteDir(args.inputFileObj._id);
   const newPath = `${fileDir}/${newName}`;
+
+  args.jobLog(`inputFileObj._id: ${args.inputFileObj._id}`);
+  args.jobLog(`container: ${container}`);
+  args.jobLog(`fileDir: ${fileDir}`);
+  args.jobLog(`fileName: ${fileName}`);
+  args.jobLog(`newName: ${newName}`);
+  args.jobLog(`newPath: ${newPath}`);
 
   if (args.inputFileObj._id === newPath) {
     args.jobLog('Input and output path are the same, skipping rename.');
