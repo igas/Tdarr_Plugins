@@ -5,12 +5,12 @@ exports.plugin = exports.details = void 0;
 var flowUtils_1 = require("../../../../FlowHelpers/1.0.0/interfaces/flowUtils");
 /* eslint-disable no-param-reassign */
 var details = function () { return ({
-    name: 'Keep single audio track',
-    description: 'Remove additional audio tracks',
+    name: 'Keep single video track',
+    description: 'Remove additional video tracks',
     style: {
         borderColor: 'DeepPink',
     },
-    tags: 'audio',
+    tags: 'video',
     isStartPlugin: false,
     pType: '',
     requiresVersion: '2.11.01',
