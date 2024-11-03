@@ -46,7 +46,7 @@ var plugin = function (args) {
     var targetCodec = String(args.inputs.outputCodec);
     args.variables.ffmpegCommand.streams.forEach(function (stream) {
         if (stream.codec_type === 'subtitle') {
-            stream.outputArgs.push('-c:a:{outputTypeIndex}', targetCodec);
+            stream.outputArgs.push('-c:s:{outputTypeIndex}', targetCodec);
         }
     });
     return {
