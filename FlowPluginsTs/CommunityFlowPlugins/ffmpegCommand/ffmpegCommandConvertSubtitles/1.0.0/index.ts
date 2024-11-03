@@ -53,7 +53,7 @@ const plugin = (args: IpluginInputArgs): IpluginOutputArgs => {
 
   args.variables.ffmpegCommand.streams.forEach((stream) => {
     if (stream.codec_type === 'subtitle') {
-      stream.outputArgs.push('-c:a:{outputTypeIndex}', targetCodec);
+      stream.outputArgs.push('-c:s:{outputTypeIndex}', targetCodec);
     }
   });
 
