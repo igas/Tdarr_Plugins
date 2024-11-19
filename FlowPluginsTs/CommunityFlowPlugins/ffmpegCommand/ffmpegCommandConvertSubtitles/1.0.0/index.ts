@@ -30,7 +30,18 @@ const details = (): IpluginDetails => ({
         type: 'dropdown',
         options: ['copy', 'ass', 'srt', 'ssa', 'mov_text'],
       },
-      tooltip: 'Specify codec of the output file',
+      tooltip: 'Specify codec for the subtitles',
+    },
+    {
+      label: 'Preferred language',
+      name: 'preferredLanguage',
+      type: 'string',
+      defaultValue: 'eng',
+      inputUI: {
+        type: 'dropdown',
+        options: ['eng', 'rus'],
+      },
+      tooltip: 'Specify language to keep',
     },
   ],
   outputs: [
@@ -50,10 +61,15 @@ const plugin = (args: IpluginInputArgs): IpluginOutputArgs => {
   checkFfmpegCommandInit(args);
 
   const targetCodec = String(args.inputs.outputCodec);
+  const preferredLanguage = String(args.inputs.preferredLanguage);
 
   args.variables.ffmpegCommand.streams.forEach((stream) => {
-    if (stream.codec_type === 'subtitle') {
+    if (stream.codec_type === 'subtitle'
+      && stream.tags
+      && stream.tags.language
+      && preferredLanguage === stream.tags.language.toLowerCase()) {
       stream.outputArgs.push('-c:s:{outputTypeIndex}', targetCodec);
+      stream.removed = false;
     }
   });
 
