@@ -26,7 +26,18 @@ var details = function () { return ({
                 type: 'dropdown',
                 options: ['copy', 'ass', 'srt', 'ssa', 'mov_text'],
             },
-            tooltip: 'Specify codec of the output file',
+            tooltip: 'Specify codec for the subtitles',
+        },
+        {
+            label: 'Preferred language',
+            name: 'preferredLanguage',
+            type: 'string',
+            defaultValue: 'eng',
+            inputUI: {
+                type: 'dropdown',
+                options: ['eng', 'rus'],
+            },
+            tooltip: 'Specify language to keep',
         },
     ],
     outputs: [
@@ -44,9 +55,14 @@ var plugin = function (args) {
     args.inputs = lib.loadDefaultValues(args.inputs, details);
     (0, flowUtils_1.checkFfmpegCommandInit)(args);
     var targetCodec = String(args.inputs.outputCodec);
+    var preferredLanguage = String(args.inputs.preferredLanguage);
     args.variables.ffmpegCommand.streams.forEach(function (stream) {
-        if (stream.codec_type === 'subtitle') {
+        if (stream.codec_type === 'subtitle'
+            && stream.tags
+            && stream.tags.language
+            && preferredLanguage === stream.tags.language.toLowerCase()) {
             stream.outputArgs.push('-c:s:{outputTypeIndex}', targetCodec);
+            stream.removed = false;
         }
     });
     return {
