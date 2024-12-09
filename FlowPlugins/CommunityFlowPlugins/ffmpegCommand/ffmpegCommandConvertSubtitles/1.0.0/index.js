@@ -57,10 +57,11 @@ var plugin = function (args) {
     var targetCodec = String(args.inputs.outputCodec);
     var preferredLanguage = String(args.inputs.preferredLanguage);
     args.variables.ffmpegCommand.streams.forEach(function (stream) {
-        if (stream.codec_type === 'subtitle'
-            && stream.tags
-            && stream.tags.language
-            && preferredLanguage === stream.tags.language.toLowerCase()) {
+        if (stream.codec_type === 'subtitle' &&
+            stream.codec_name !== 'pgssub' &&
+            stream.tags &&
+            stream.tags.language &&
+            preferredLanguage === stream.tags.language.toLowerCase()) {
             stream.outputArgs.push('-c:s:{outputTypeIndex}', targetCodec);
             stream.removed = false;
         }

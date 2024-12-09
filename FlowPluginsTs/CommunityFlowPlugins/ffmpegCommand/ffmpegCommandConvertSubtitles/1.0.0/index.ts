@@ -64,10 +64,13 @@ const plugin = (args: IpluginInputArgs): IpluginOutputArgs => {
   const preferredLanguage = String(args.inputs.preferredLanguage);
 
   args.variables.ffmpegCommand.streams.forEach((stream) => {
-    if (stream.codec_type === 'subtitle'
-      && stream.tags
-      && stream.tags.language
-      && preferredLanguage === stream.tags.language.toLowerCase()) {
+    if (
+      stream.codec_type === 'subtitle' &&
+      stream.codec_name !== 'pgssub' &&
+      stream.tags &&
+      stream.tags.language &&
+      preferredLanguage === stream.tags.language.toLowerCase()
+    ) {
       stream.outputArgs.push('-c:s:{outputTypeIndex}', targetCodec);
       stream.removed = false;
     }
