@@ -71,6 +71,7 @@ const plugin = (args: IpluginInputArgs): IpluginOutputArgs => {
       stream.tags.language &&
       preferredLanguage === stream.tags.language.toLowerCase()
     ) {
+      args.jobLog(`code_name: ${stream.codec_name}`);
       stream.outputArgs.push('-c:s:{outputTypeIndex}', targetCodec);
       stream.removed = false;
     }

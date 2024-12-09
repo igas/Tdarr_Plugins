@@ -62,6 +62,7 @@ var plugin = function (args) {
             stream.tags &&
             stream.tags.language &&
             preferredLanguage === stream.tags.language.toLowerCase()) {
+            args.jobLog("code_name: ".concat(stream.codec_name));
             stream.outputArgs.push('-c:s:{outputTypeIndex}', targetCodec);
             stream.removed = false;
         }
