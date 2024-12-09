@@ -58,11 +58,10 @@ var plugin = function (args) {
     var preferredLanguage = String(args.inputs.preferredLanguage);
     args.variables.ffmpegCommand.streams.forEach(function (stream) {
         if (stream.codec_type === 'subtitle' &&
-            stream.codec_name !== 'pgssub' &&
+            stream.codec_name !== 'hdmv_pgs_subtitle' &&
             stream.tags &&
             stream.tags.language &&
             preferredLanguage === stream.tags.language.toLowerCase()) {
-            args.jobLog("code_name: ".concat(stream.codec_name));
             stream.outputArgs.push('-c:s:{outputTypeIndex}', targetCodec);
             stream.removed = false;
         }
