@@ -66,12 +66,11 @@ const plugin = (args: IpluginInputArgs): IpluginOutputArgs => {
   args.variables.ffmpegCommand.streams.forEach((stream) => {
     if (
       stream.codec_type === 'subtitle' &&
-      stream.codec_name !== 'pgssub' &&
+      stream.codec_name !== 'hdmv_pgs_subtitle' &&
       stream.tags &&
       stream.tags.language &&
       preferredLanguage === stream.tags.language.toLowerCase()
     ) {
-      args.jobLog(`code_name: ${stream.codec_name}`);
       stream.outputArgs.push('-c:s:{outputTypeIndex}', targetCodec);
       stream.removed = false;
     }
